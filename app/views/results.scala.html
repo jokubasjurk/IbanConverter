@@ -1,0 +1,25 @@
+@(code: String)
+
+  <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("bootstrap/css/bootstrap.min.css")">
+<script src="@routes.Assets.versioned("bootstrap/js/bootstrap.min.js")" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/results.css")">
+
+  <h1 class="display-6 text-center">Results</h1>
+<div class="row justify-content-center">
+  <div class="col-auto">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Code</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>@code</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</div>
