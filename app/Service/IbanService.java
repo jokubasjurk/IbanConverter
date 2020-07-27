@@ -1,5 +1,6 @@
 package Service;
 
+
 public class IbanService {
 
     private String countryCode;
@@ -11,41 +12,70 @@ public class IbanService {
         this.bankCode = bankCode;
     }
 
-    public String getNormalizedIban()
+    public String getBankCode()
     {
-        int len = bankCode.length();
-        int count = 0,prad=0,pab=0;
-
-        char res = bankCode.charAt(0);
-        for (int i=0; i<len; i++)
-        {
-            int cur_count = 1;
-            for (int j=i+1; j<len; j++)
-            {
-                if (bankCode.charAt(i) != bankCode.charAt(j))
-                    break;
-                cur_count++;
-            }
-
-            if (cur_count > count)
-            {
-                count = cur_count;
-                pab=i;
-                res = bankCode.charAt(i);
-            }
-        }
-        int pradzia = pab;
-        int i = pab;
-        while(i<len && bankCode.charAt(i)==res){
-            i++;
-        }
-        pab=i;
-        String rezult = bankCode;
-        if(count>=2)
-            rezult = bankCode.substring(0, pradzia) + '(' + bankCode.substring(pradzia,pab) + ')' + bankCode.substring(pab,len);
-        String code = countryCode + ' ' + rezult;
-
-        return code;
+        return bankCode;
+    }
+    public void setBankCode(String bankCode)
+    {
+        this.bankCode = bankCode;
+    }
+    public String getCountryCode()
+    {
+        return countryCode;
+    }
+    public void setCountryCode(String countryCode)
+    {
+        this.countryCode = countryCode;
     }
 
+    private void formatBankCode()
+    {
+        int maxCount = getNumberOfConsecutiveChars();
+        int increasedIndex=0;
+        StringBuilder bankCodeBuilder = new StringBuilder(bankCode);
+        for (int i=0; i<bankCode.length()-1; i++){
+            int currentCountOfChars = 1;
+            for (int j=i+1; j<bankCode.length(); j++){
+                if (bankCode.charAt(i) != bankCode.charAt(j))
+                    break;
+                currentCountOfChars++;;
+            }
+
+            if (currentCountOfChars == maxCount)
+            {
+                System.out.println("countas: " + maxCount);
+                int startIndex = i;
+                int endIndex = startIndex+maxCount;
+                bankCodeBuilder.insert(startIndex+increasedIndex,'(');
+                //index increases because '(' is added to the string
+                increasedIndex++;
+                bankCodeBuilder.insert(endIndex+increasedIndex,')');
+                //index increases because ')' is added to the string
+                increasedIndex++;
+            }
+        }
+        bankCode = bankCodeBuilder.toString();
+    }
+
+    public String getConcatIban()
+    {
+        formatBankCode();
+        return countryCode + " " + bankCode;
+    }
+    private int getNumberOfConsecutiveChars()
+    {
+        int count = 0;
+        for (int i=0; i<bankCode.length()-1; i++){
+            int currentCountOfChars = 1;
+            for (int j=i+1; j<bankCode.length(); j++){
+                if (bankCode.charAt(i) != bankCode.charAt(j))
+                    break;
+                currentCountOfChars++;;
+            }
+            if (currentCountOfChars >= count && currentCountOfChars>1)
+                count = currentCountOfChars;
+        }
+        return count;
+    }
 }

@@ -20,7 +20,7 @@ public class HomeController extends Controller {
         String bankCode = params.get("bankCode")[0];
 
         IbanService ibanCode = new IbanService(countryCode,bankCode);
-        String finalCode = ibanCode.getNormalizedIban();
+        String finalCode = ibanCode.getConcatIban();
 
         return ok(views.html.results.render(finalCode));
     }
