@@ -1,81 +1,59 @@
 package Service;
 
-
 public class IbanService {
 
-    private String countryCode;
-    private String bankCode;
-
-    public IbanService(String countryCode, String bankCode)
-    {
-        this.countryCode = countryCode;
-        this.bankCode = bankCode;
+    public IbanService(){
     }
 
-    public String getBankCode()
+    public String formatBankCode(String bankCode)
     {
-        return bankCode;
-    }
-    public void setBankCode(String bankCode)
-    {
-        this.bankCode = bankCode;
-    }
-    public String getCountryCode()
-    {
-        return countryCode;
-    }
-    public void setCountryCode(String countryCode)
-    {
-        this.countryCode = countryCode;
-    }
-
-    private void formatBankCode()
-    {
-        int maxCount = getNumberOfConsecutiveChars();
-        int increasedIndex=0;
+        int maxCount = getMaxConsecutiveCharLength(bankCode);
+        int numOfPairs = 0;
         StringBuilder bankCodeBuilder = new StringBuilder(bankCode);
         for (int i=0; i<bankCode.length()-1; i++){
-            int currentCountOfChars = 1;
-            for (int j=i+1; j<bankCode.length(); j++){
-                if (bankCode.charAt(i) != bankCode.charAt(j))
-                    break;
-                currentCountOfChars++;;
-            }
+
+            int currentCountOfChars = getConsecutiveCharLength(i,bankCode);
 
             if (currentCountOfChars == maxCount)
             {
-                System.out.println("countas: " + maxCount);
-                int startIndex = i;
-                int endIndex = startIndex+maxCount;
-                bankCodeBuilder.insert(startIndex+increasedIndex,'(');
-                //index increases because '(' is added to the string
-                increasedIndex++;
-                bankCodeBuilder.insert(endIndex+increasedIndex,')');
-                //index increases because ')' is added to the string
-                increasedIndex++;
+                int endIndex = i +maxCount;
+
+                addParentheses(i, endIndex, bankCodeBuilder, numOfPairs);
+                numOfPairs++;
             }
         }
         bankCode = bankCodeBuilder.toString();
+        return bankCode;
     }
-
-    public String getConcatIban()
+    public String concatenateIbanCode(String countryCode,String bankCode)
     {
-        formatBankCode();
         return countryCode + " " + bankCode;
     }
-    private int getNumberOfConsecutiveChars()
+    private int getMaxConsecutiveCharLength(String bankCode)
     {
         int count = 0;
         for (int i=0; i<bankCode.length()-1; i++){
-            int currentCountOfChars = 1;
-            for (int j=i+1; j<bankCode.length(); j++){
-                if (bankCode.charAt(i) != bankCode.charAt(j))
-                    break;
-                currentCountOfChars++;;
-            }
-            if (currentCountOfChars >= count && currentCountOfChars>1)
+            int currentCountOfChars = getConsecutiveCharLength(i,bankCode);
+            if (currentCountOfChars > count && currentCountOfChars>1)
                 count = currentCountOfChars;
         }
         return count;
+    }
+    private int getConsecutiveCharLength(int i,String bankCode){
+
+        int currentCountOfChars = 1;
+        for (int j=i+1; j<bankCode.length(); j++){
+            if (bankCode.charAt(i) != bankCode.charAt(j))
+                break;
+            currentCountOfChars++;
+        }
+        return currentCountOfChars;
+
+    }
+    private StringBuilder addParentheses(int firstIndex, int secondIndex, StringBuilder bankCode, int numberOfPairs)
+    {
+        bankCode.insert(firstIndex + numberOfPairs*2 ,'(');
+        bankCode.insert(secondIndex + numberOfPairs*2 + 1,')');
+        return bankCode;
     }
 }

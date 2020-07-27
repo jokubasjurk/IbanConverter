@@ -19,8 +19,9 @@ public class HomeController extends Controller {
         String countryCode = params.get("countryCode")[0];
         String bankCode = params.get("bankCode")[0];
 
-        IbanService ibanCode = new IbanService(countryCode,bankCode);
-        String finalCode = ibanCode.getConcatIban();
+        IbanService ibanCode = new IbanService();
+        bankCode = ibanCode.formatBankCode(bankCode);
+        String finalCode = ibanCode.concatenateIbanCode(countryCode,bankCode);
 
         return ok(views.html.results.render(finalCode));
     }
